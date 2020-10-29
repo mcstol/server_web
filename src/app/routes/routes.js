@@ -1,8 +1,8 @@
 const routes = require('express').Router()
-const get = require('./../controllers/get')
+const clientesController = require('../controllers/clientesController')
 const post = require('./../controllers/post')
 
-routes.get('/', get)
+routes.get('/clientes', clientesController.get)
 routes.post('/', post)
 
 module.exports = routes
