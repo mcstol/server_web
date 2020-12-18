@@ -1,11 +1,17 @@
 const clientesDao = require('../dao/ClientesDao')
-exports.list = (callback) => {
-    clientesDao.list(callback)
+exports.listAllClientes = (callback) => {
+    clientesDao.listAllClientes(callback)
 }
-exports.insert = (cadastro, callback) => {
-    clientesDao.insert(cadastro, callback)
-
+exports.listCliente = (id, callback) => {
+    clientesDao.listCliente(id, callback)
 }
-exports.delete = (registro, callback) => {
-    clientesDao.delete(registro, callback)
+exports.insert = (novoCliente, callback) => {
+    clientesDao.insert(novoCliente, callback)
+}
+exports.delete = (id, callback) => {
+    clientesDao.delete(id, callback)
+}
+exports.put = (id, alterRegistro, callback) => {
+    clientesDao.put(id, alterRegistro, callback)
+        // console.log("atualizou")
 }

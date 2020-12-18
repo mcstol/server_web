@@ -1,7 +1,7 @@
 const { insert } = require("../service/clientesService");
 const connectionFactory = require("./ConnectionFactory")
 
-exports.list = (callback) => {
+exports.listAllClientes = (callback) => {
     connectionFactory.getConnection(function(err, connection) {
         if (err) {
             if (connection)
@@ -20,42 +20,82 @@ exports.list = (callback) => {
         }
     });
 }
-exports.insert = (cadastro, callback) => {
+exports.listCliente = (id, callback) => {
     connectionFactory.getConnection(function(err, connection) {
         if (err) {
             if (connection)
                 connection.release()
             callback(err)
         } else {
-            connection.query('INSERT INTO cliente (email,senha) VALUES(?,?)', [cadastro.email, cadastro.senha],
-                (err, clientes => {
+            connection.query('select * from cliente where id = ?', [id],
+                ((err, cliente) => {
                     connection.release()
                     if (err) {
                         callback(err)
-                    } else
-                    // callback(clientes)
-                        console.log("Inserido")
+                    } else {
+                        callback(err, cliente)
+                    }
+                }))
+        }
+    })
+}
+exports.insert = (novoCliente, callback) => {
+    connectionFactory.getConnection(function(err, connection) {
+        if (err) {
+            if (connection)
+                connection.release()
+            callback(err)
+        } else {
+            connection.query('INSERT INTO cliente (email,senha) VALUES(?,?)', [novoCliente.email, novoCliente.senha],
+                ((err, insertedrow) => {
+                    connection.release()
+                    if (err) {
+                        callback(err)
+                    } else {
+                        novoCliente.id = insertedrow.insertId
+                        callback(null, novoCliente)
+                    }
+
+                    // console.log("Inserido")
                 })
             )
         }
     })
 }
-exports.delete = (registro, callback) => {
+exports.delete = (id, callback) => {
     connectionFactory.getConnection(function(err, connection) {
         if (err) {
             connection.release()
             callback(err)
         } else {
-            connection.query('DELETE FROM cliente WHERE id = ?', [registro.id],
+            connection.query('DELETE FROM cliente WHERE id = ?', [id],
                 (err => {
                     connection.release()
                     if (err) {
                         callback(err)
                     } else {
+                        callback()
                         console.log("Apagado!")
                     }
                 })
             )
+        }
+    })
+}
+exports.put = (id, alterRegistro, callback) => {
+    connectionFactory.getConnection(function(err, connection) {
+        if (err) {
+            connection.release()
+            callback(err)
+        } else {
+            connection.query('UPDATE cliente SET email = ?, senha = ? WHERE ID = ?', [alterRegistro.email, alterRegistro.senha, id],
+                ((err) => {
+                    connection.release()
+                    if (err) {
+                        callback(err)
+                    } else
+                        callback()
+                }))
         }
     })
 }

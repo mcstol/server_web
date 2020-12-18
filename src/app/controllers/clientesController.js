@@ -1,20 +1,49 @@
 const clientesService = require('../service/clientesService')
 
-exports.get = (req, res) => {
-    clientesService.list((err, clientes) => {
+exports.getListClientes = (req, res) => {
+    clientesService.listAllClientes((err, clientes) => {
         if (err) {
             res.status(500).send(err)
         } else
             res.status(200).json(clientes)
     })
 }
+exports.getCliente = (req, res) => {
+    clientesService.listCliente(req.params.id, (err, cliente) => {
+        if (err) {
+            res.status(500).send(err)
+        } else
+            res.status(200).json(cliente)
+    })
+}
+
 exports.post = (req, res) => {
-    clientesService.insert(req.body)
-    res.status(200).send('OK ')
+    // clientesService.insert(req.body,)
+    // res.status(201).send('ok')
+    clientesService.insert(req.body, (err, cadastro) => {
+            if (err) {
+                res.status(500).send(err)
+            } else
+                res.status(201).json(cadastro)
+        })
+        // res.status(201).json(cadastro)
         // console.log(req.body)
 }
 exports.delete = (req, res) => {
-    clientesService.delete(req.body)
-    res.status(200).send(req.body)
-        //console.log(req.body)
+    clientesService.delete(req.params.id, (err) => {
+        if (err) {
+            res.status(500).send(err)
+        } else
+            res.status(200).send()
+    })
+}
+exports.put = (req, res) => {
+    clientesService.put(req.params.id, req.body, (err) => {
+            if (err) {
+                res.status(500).send(err)
+            } else
+                res.status(200).send()
+        })
+        // console.log('atualizado')
+        // res.status(200).send("atualizou")
 }
